@@ -44,16 +44,20 @@ class Card:
 
 # Define the Deck class
 class Deck:
-    def __init__(self):
-        self.cards = [Card(rank, suit) for suit in Suit for rank in Rank]
-        self.shuffle()
+    def __init__(self, predefined_cards=None):
+        if predefined_cards is not None:
+            # Use the predefined list of cards
+            self.cards = predefined_cards
+        else:
+            # Default to a standard deck if no predefined order is provided
+            self.cards = [Card(rank, suit) for suit in Suit for rank in Rank]
 
     def __len__(self):
         return len(self.cards)
 
     def __str__(self):
         cards_str = '\n'.join(str(card) for card in self.cards)
-        return f'Deck of {len(self)} cards: {cards_str}'
+        return f'Deck of {len(self)} cards:\n{cards_str}'
 
     def __repr__(self):
         return self.__str__()
@@ -61,11 +65,23 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    # def deal(self):
-    #     return self.cards.pop() if self.cards else None
+    def deal(self, amount: int):
+        # Check if there are enough cards to deal
+        if amount <= 0 or amount > len(self.cards):
+            raise ValueError("Not enough cards in the deck to deal, or passed value < 0")
+        # Remove the first n cards from the deck
+        dealt_cards = self.cards[:amount]
+        self.cards = self.cards[amount:]
+        return dealt_cards
 
 Rank(2)
 card = Card(Rank(2), Suit('CLUBS'))
 print(card)
 deck = Deck()
+print(deck)
+deck.shuffle()
+print(deck)
+# deck.deal(55)
+# deck.deal(0)
+print(deck.deal(3))
 print(deck)
